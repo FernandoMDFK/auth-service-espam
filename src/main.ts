@@ -9,16 +9,17 @@ async function bootstrap() {
   //seguridad de cabeceras http
   app.use(helmet());
 
+ // CORS configurado para aceptar al frontend
   app.enableCors({
-    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http:localhost:3000'],
-    methods: ['GET,PUT,POST,DELETE'],
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   });
 
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, //
-      forbidNonWhitelisted: true, //mensajes de error en campos no permitidos
+      whitelist: true, 
+      forbidNonWhitelisted: true, 
       transform: true,
       transformOptions: {
         enableImplicitConversion: true,
@@ -26,7 +27,8 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 8000);
+  // Aseguramos que levante en el 3000 (Auth Service)
+  await app.listen(process.env.PORT ?? 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 
 }
